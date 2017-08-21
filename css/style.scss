@@ -1,0 +1,139 @@
+$bg-color: #4fb56f;
+$bg-color-shade-light: $bg-color/1.1;
+$bg-color-shade-medium-1: $bg-color/1.3;
+$bg-color-shade-dark: $bg-color/1.5;
+@import url("animate.css");
+
+@font-face {
+  font-family: Hensa;
+  src: url("../font/Hensa.otf");
+}
+
+@keyframes pulse-right{
+  0% {opacity: 0;
+      right:-50%;
+      }
+  100%{opacity: 1;
+      right:0;}
+}
+@keyframes pulse-left{
+  0% {opacity: 0;
+      left:-50%;
+      }
+  100%{opacity: 1;
+      left:0;}
+}
+@keyframes shrink{
+  0%{width: 35%}
+  100%{width: 0}
+}
+
+h1{
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  font-size: 120px;
+  font-family: "Hensa", sans-serif;
+  font-weight: 500;
+  letter-spacing: 3px;
+  color: #ffffff;
+  opacity: 0.9;
+  z-index: 5;
+}
+
+#color-main{
+  margin: -90px 0 0 -110px;
+  left: 50%;
+  width: 200px;
+  height: 200px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  background-color:  #ED1E79;
+}
+.pulse{
+  animation-name: pulse;
+  animation-duration: .5s;
+  animation-iteration-count: 2;
+}
+.color-choice,
+#color-main{
+  border-radius: 20%;
+}
+#game-controller{
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 10;
+  min-width:30%;
+  bottom:0;
+  left: 50%;
+  transform: translate(-51%,0);
+  text-align: center;
+}
+//COLOR PANEL AND BUTTONS
+#color-panel{
+  box-sizing: border-box;
+  min-height: 100px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  border: 1px solid black;
+  background-color: #ffffff;
+  padding:20px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+}
+
+.color-choice{
+  width: 50px;
+  height: 50px;
+  border: none;
+}
+
+.color-choice:hover{
+  height:56px;
+  width: 56px;
+  margin-left: -3px;
+  margin-top: -1px;
+}
+
+.active{
+  height:25px;
+  width: 25px;
+  margin-left: 5px;
+  margin-top: -2px;
+} // END OF COLOR PANEL AND BUTTONS
+
+// BACKGROUND MODIFICATIONS
+body{
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  background-color: $bg-color;
+  width:100%;
+}
+
+#timer-panel{
+  font-weight: 900;
+  font-size: 18px;
+}
+.bg-right{
+  animation-name: pulse-right;
+  background: linear-gradient(to right,transparent, transparent,$bg-color-shade-light, $bg-color-shade-medium-1, $bg-color-shade-dark);
+  right: 0;
+}
+
+.bg-left{
+  animation-name: pulse-left;
+  background: linear-gradient(to left,transparent, $bg-color-shade-light, $bg-color-shade-medium-1, $bg-color-shade-dark);
+}
+.bg-left, .bg-right{
+  position: absolute;
+  height: 100vh;
+  top: 0;
+  animation-duration: 5s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  width: 35%;
+  z-index: 0;
+} // END OF BACKGROUND MODIFICATIONS
