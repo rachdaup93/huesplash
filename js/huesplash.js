@@ -1,46 +1,20 @@
-var COLOR_MAX = 16581375;
-function generateRandomNum(n) {
-  return Math.floor(Math.random()*n);
+var Color = new Color();
+function RgbMatching() {
+  this.colorCenter;
+  this.colorList;
+  this.colorCorrect;
 }
 
-function colorSimulator(colorList) {
-  var colorMain,
-      colorButtons,
-      colorListLength,
-      colorOptionList,
-      colorCorrect,
-      index;
-
-  colorCorrect = HexToDecimal(colorList[0]);
-  colorOptionList = colorList.slice(1);
-  index = 1;
-  listLastIndex = colorOptionList.length - 1;
-  colorOptionList = shuffle(colorOptionList);
-  colorMain = colorOptionList[0];
-  $("#color-main").css('background-color',colorMain);
-
-  colorButtons = $('.color-choice');
-  for(i = 0; i < colorButtons.length; i++){
-    if(index > listLastIndex){
-      $(colorButtons[i]).css('background-color',ToHexString(generateRandomNum(colorCorrect)));
-    }
-    else {
-      $(colorButtons[i]).css('background-color',colorOptionList[index]);
-    }
-    index++;
-  }
-}
-
-
-function bgColorChange() {
+RgbMatching.prototype.bgColorChange = function() {
   var shadeArray = ['','transparent'];
-  var color = generateRandomNum(COLOR_MAX);
-  colorsGenerator(color, 3);
-  color = ToHexString(color);
+  color = Color.generateRandomNum(Color.COLOR_MAX);
+  this.colorCorrect = color;
+  colorsGenerator(this,3);
+  color = Color.ToHexString(color);
 
-  var shade = ColorLuminance(color, -0.2);
-  var shadeMed = ColorLuminance(color, -0.4);
-  var shadeDark = ColorLuminance(color, -0.8);
+  var shade = Color.ColorLuminance(color, -0.2);
+  var shadeMed = Color.ColorLuminance(color, -0.4);
+  var shadeDark = Color.ColorLuminance(color, -0.8);
 
   shadeArray.push(shade);
   shadeArray.push(shadeMed);
@@ -55,93 +29,147 @@ function bgColorChange() {
   $(".bg-left").css("background",linearGrad);
 }
 
-function ColorLuminance(hex, lum) {
-
-	// validate hex string
-	hex = hex.replace(/[^0-9a-f]/gi, '');
-	if (hex.length < 6) {
-		hex = hex[0]+hex[0]+hex[1]+hex[1]+hex[2]+hex[2];
-	}
-	lum = lum || 0;
-
-	// convert to decimal and change luminosity
-	var rgb = "#", c, i;
-	for (i = 0; i < 3; i++) {
-		c = parseInt(hex.substr(i*2,2), 16);
-		c = Math.round(Math.min(Math.max(0, c + (c * lum)), 255)).toString(16);
-		rgb += ("00"+c).substr(c.length);
-	}
-
-	return rgb;
+RgbMatching.prototype.HueAdd = function(colorMain,color,operation){
+  colorMain = Color.HexToDecimal(colorMain);
+  color = Color.HexToDecimal(color);
+  if(operation == 1){
+    colorMain += color;
+    if($("#color-main").hasClass("initial")){
+      colorMain = Color.ToHexString(color);
+      $("#color-main").css('background-color',colorMain);
+      $("#color-main").removeClass("initial");
+    }
+    else if(colorMain >= Color.COLOR_MAX){
+      $("#color-main").css('background-color',Color.ToHexString(Color.COLOR_MAX));
+      colorMain = Color.ToHexString(colorMain);
+    }
+    else{
+      colorMain = Color.ToHexString(colorMain);
+      $("#color-main").css('background-color',colorMain);
+    }
+  }
+  else{
+    colorMain -= color;
+    console.log(colorMain);
+    if(colorMain === 0){
+      colorMain = Color.COLOR_MAX;
+      $("#color-main").addClass("initial");
+    }
+    colorMain = Color.ToHexString(colorMain);
+    $("#color-main").css('background-color',colorMain);
+  }
 }
 
-$('#press').click(function(){
-  setTimeout(bgColorChange(), 1000);
-});
+function colorsGenerator(rgbObj, amount){
+  var colorNum = rgbObj.colorCorrect,
+  colorOption,
+  colorList,
+  redVal,
+  greenVal,
+  blueVal;
+  colorList = [Color.ToHexString(colorNum)];
+  redVal = colorList[0].slice(1,3);
+  greenVal = colorList[0].slice(3,5);
+  blueVal = colorList[0].slice(5);
 
+  rgbObj.RedValue(redVal);
+  rgbObj.GreenValue(greenVal);
+  rgbObj.BlueValue(blueVal);
 
-function colorsGenerator(colorMain, amount){
-  var colorList = [ToHexString(colorMain)];
-  var colorNum = colorMain;
-  var colorOption;
   for(var  i = 0; i < amount-1; i++){
-    colorOption = generateRandomNum(colorNum);
-    colorList.push(ToHexString(colorOption));
+    colorOption = Color.generateRandomNum(colorNum);
+    colorList.push(Color.ToHexString(colorOption));
     colorNum -= colorOption;
   }
-  colorList.push(ToHexString(colorNum));
-  colorSimulator(colorList);
+  colorList.push(Color.ToHexString(colorNum));
+  rgbObj.colorList = colorList;
+}
+RgbMatching.prototype.RedValue = function (redVal) {
+  var redPanelButtons, redColorList = [];
+  redValCorrect = "#" + redVal + "0000";
+  redVal = 0;
+
+  redColorList.push(redValCorrect);
+  redPanelButtons = $("#red-panel .color-choice");
+  for(i = 0; i < redPanelButtons.length-1; i++){
+    redVal = Color.generateRandomNum(255).toString(16);
+    if(redVal.length === 1)
+      redVal = '0' + redVal
+    redColorList.push("#" + redVal + "0000");
+  }
+  Color.shuffle(redColorList);
+  for(i = 0; i < redPanelButtons.length; i++){
+    $(redPanelButtons[i]).css('background-color',redColorList[i]);
+  }
+};
+
+RgbMatching.prototype.GreenValue = function (greenVal) {
+  var greenPanelButtons, greenColorList = [];
+  greenValCorrect = "#00" + greenVal + "00"
+  greenVal = 0;
+
+  greenColorList.push(greenValCorrect);
+  greenPanelButtons = $("#green-panel .color-choice");
+  for(i = 0; i < greenPanelButtons.length-1; i++){
+    greenVal = Color.generateRandomNum(255).toString(16);
+    if(greenVal.length === 1)
+      greenVal = '0' + greenVal
+    greenColorList.push("#00" + greenVal + "00");
+  }
+  Color.shuffle(greenColorList);
+  for(i = 0; i < greenPanelButtons.length; i++){
+    $(greenPanelButtons[i]).css('background-color',greenColorList[i]);
+  }
+  console.log(greenValCorrect);
+};
+
+RgbMatching.prototype.BlueValue = function (blueVal) {
+  var bluePanelButtons, blueColorList = [];
+  blueValCorrect = "#0000" + blueVal;
+  blueVal = 0;
+
+  blueColorList.push(blueValCorrect);
+  bluePanelButtons = $("#blue-panel .color-choice");
+  for(i = 0; i < bluePanelButtons.length-1; i++){
+    blueVal = Color.generateRandomNum(255).toString(16);
+    if(blueVal.length === 1)
+      blueVal = '0' + blueVal;
+    blueColorList.push("#0000" + blueVal);
+  }
+  Color.shuffle(blueColorList);
+  for(i = 0; i < bluePanelButtons.length; i++){
+    $(bluePanelButtons[i]).css('background-color',blueColorList[i]);
+  }
+};
+
+RgbMatching.prototype.reset = function(){
+
 }
 
-function ToHexString(colorVal){
-  var colorHex = colorVal.toString(16);
+var game = new RgbMatching();
 
-  if(colorHex.length < 6){
-    for(var i = 0; i < (7 - colorHex.length); i++){
-    colorHex = "0" + colorHex;
-    }}
-
-  return '#' + colorHex;
-}
-function HexToDecimal(hex){
-  hexString = hex.substr(1);
-  return parseInt(hexString, 16);
-}
-
-function rgbToHex(rgb){
- rgb = rgb.match(/^rgba?[\s+]?\([\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?,[\s+]?(\d+)[\s+]?/i);
- return (rgb && rgb.length === 4) ? "#" +
-  ("0" + parseInt(rgb[1],10).toString(16)).slice(-2) +
-  ("0" + parseInt(rgb[2],10).toString(16)).slice(-2) +
-  ("0" + parseInt(rgb[3],10).toString(16)).slice(-2) : '';
-}
-
-function shuffle(array) {
-    var j, x, i;
-    for (i = array.length; i; i--) {
-        j = Math.floor(Math.random() * i);
-        x = array[i - 1];
-        array[i - 1] = array[j];
-        array[j] = x;
-    }
-    return array;
-}
-
-function HueAdd(colorMain,color){
-  colorMain = HexToDecimal(colorMain);
-  color = HexToDecimal(color);
-  colorMain += color;
-  if(colorMain >= COLOR_MAX)
-    colorMain = COLOR_MAX;
-  colorMain = ToHexString(colorMain);
-  $("#color-main").css('background-color',colorMain);
-}
-
-$(".color-choice").click(function(){
-  var colorOption = rgbToHex($(this).css("background-color"));
-  var colorMain = rgbToHex($("#color-main").css("background-color"));
-  HueAdd(colorMain, colorOption);
+$('#press').click(function(){
+  setTimeout(game.bgColorChange(), 1000);
 });
 
-// setInterval(bgColorChange, 5000)
-// bgColorChange();
+$(".color-choice").click(function(){
+  var colorOption = Color.rgbToHex($(this).css("background-color"));
+  var colorMain = Color.rgbToHex($("#color-main").css("background-color"));
+
+  if($(this).hasClass("active")){
+    $(this).removeClass("active");
+    game.HueAdd(colorMain, colorOption, 0);
+  }
+  else{
+    $(this).addClass("active");
+    $(this).prevAll().removeClass("active");
+    $(this).nextAll().removeClass("active");
+    $(".color-choice").change(function(){
+      var color = Color.rgbToHex($(this).css("background-color"));
+      var Main = Color.rgbToHex($("#color-main").css("background-color"));
+      if(!$(this).hasClass("active"))
+        game.HueAdd(Main, color, 0);
+      });
+    game.HueAdd(colorMain, colorOption, 1);
+  }
+});
