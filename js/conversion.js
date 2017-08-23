@@ -1,9 +1,16 @@
 function Color(){
-  this.COLOR_MAX = 16777215;
+  this.COLOR_MAX = 255;
 };
 
 Color.prototype.generateRandomNum = function (n) {
   return Math.floor(Math.random()*n);
+}
+
+Color.prototype.numberIncrement = function(baseNum, increm){
+  newNum = baseNum + increm;
+  if(newNum > this.COLOR_MAX)
+    newNum = increm;
+  return newNum;
 }
 
 Color.prototype.HexToDecimal = function (hex){
@@ -14,6 +21,12 @@ Color.prototype.HexToDecimal = function (hex){
     hexString = hex;
 
   return parseInt(hexString, 16);
+}
+
+Color.prototype.RgbToArray = function(rgb){
+  var colorValArray = rgb.substr(4,rgb.length - 5);
+  colorValArray = colorValArray.split(',');
+  return colorValArray;
 }
 
 Color.prototype.ToHexString = function(colorVal){
