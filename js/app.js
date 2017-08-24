@@ -39,6 +39,7 @@ $(".color-choice").click(function(){
   game.HueAdd(colorOption, colorPanel);
 });
 
+
 $("#exit").click(function(){
   game.gameOver();
 });
