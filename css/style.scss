@@ -26,6 +26,11 @@ $bg-color-shade-medium: #45145A/4 ;
   100%{box-shadow: 0 0 40px #fff;}
 }
 
+.header,
+.start-up{
+  font-family: "Hensa", sans-serif;
+}
+
 .header{
   text-align: center;
   position: absolute;
@@ -44,6 +49,12 @@ h1{
     opacity: 0.9;
     margin: 0;
 }
+
+h2,
+.start-up{
+  font-size: 60px;
+}
+
 h2{
   width:80px;
   height: 60px;
@@ -108,7 +119,38 @@ h2{
   animation-iteration-count: infinite;
 }
 
-.color-choice,
+.hidden{
+  display:none;
+}
+
+.start-up{
+  position: absolute;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  background-color: transparent;
+  border: none;
+  color: #84EECA;
+  z-index: 30;
+}
+
+.start-up:hover{
+  font-size: 65px;
+}
+
+.start-up{
+  animation-duration: .3s;
+}
+
+#new-game{
+  bottom: 28%;
+  color: #EEAA29;
+}
+
+#tutorial{
+  bottom: 40%;
+}
+
+button,
 #color-main,
 #animation-wrapper{
   border-radius: 20%;
@@ -121,7 +163,7 @@ h2{
   min-width:25%;
   bottom:50%;
   left: 50%;
-  transform: translate(13%,62%);
+  transform: translate(26%,63%);
   text-align: center;
 }
 // COLOR PANEL AND BUTTONS
@@ -185,9 +227,15 @@ button:focus, .color-choice.active:hover{
   min-height: 40px;
 }
 
-#timer-panel > span{
+#reset,
+#exit{
   display: inline-block;
   min-width: 30px;
+}
+
+#time{
+  display: inline-block;
+  min-width: 82px;
 }
 
 #reset:hover, #exit:hover{
@@ -197,14 +245,14 @@ button:focus, .color-choice.active:hover{
 // BACKGROUND MODIFICATIONS
 body{
   overflow-x: hidden;
-  color: #ffffff; 
+  color: #ffffff;
 }
 #bg{
   height:100vh;
   margin: 0;
   padding: 0;
-  background-color: $bg-color;
   width:100%;
+  background-color: #000;
 }
 .bg-right{
   animation-name: pulse-right;

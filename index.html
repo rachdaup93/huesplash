@@ -10,13 +10,15 @@
   </head>
   <body>
     <h1 class="header">HueSplash</h1>
-    <h2 class="header">0</h2>
+    <h2 class="header hidden">0</h2>
+    <button id="new-game" class="start-up">Start</button>
+    <button id="tutorial" class="start-up">Tutorial</button>
     <div id="bg">
     <div class="bg-right"></div>
-    <div id="animation-wrapper">
+    <div id="animation-wrapper" class="hidden">
       <div id="color-main" class="initial"></div>
-    </div>
-    <div id="game-controller">
+      </div>
+    <div id="game-controller" class="hidden">
         <div id="color-panel">
           <div class="hue-panel" id="red-panel">
             <button class="color-choice"></button>
@@ -37,13 +39,12 @@
             <button class="color-choice"></button>
           </div>
         </div>
-        <button id="press">press</button>
         <div id="timer-panel">
           <span class="glyphicon glyphicon-refresh" id="reset"></span>
-          0:00
+          <!-- <span id="time">0:00</span> -->
           <span class="glyphicon glyphicon-remove-sign" id="exit"></span>
         </div>
-    </div>
+      </div>
   </div>
     <!-- scripts -->
     <script
@@ -52,6 +53,7 @@
   crossorigin="anonymous"></script>
     <script src="./js/conversion.js" type="text/javascript"></script>
   <script src="./js/huesplash.js" type="text/javascript"></script>
-  <script src="./js/app.js" type="text/javascript"></script>
+  <script src="./js/timer.js" type="text/javascript"></script>
+    <script src="./js/app.js" type="text/javascript"></script>
  </body>
 </html>

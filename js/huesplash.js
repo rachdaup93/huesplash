@@ -11,6 +11,7 @@ function RgbMatching() {
 
 RgbMatching.prototype.bgColorChange = function() {
   var shadeArray = ['','transparent'], color;
+  $("body").css("background-color", "rgb(255,255,255)");
   this.colorCorrect.push(Color.generateRandomNum(Color.COLOR_MAX));
   this.colorCorrect.push(Color.generateRandomNum(Color.COLOR_MAX));
   this.colorCorrect.push(Color.generateRandomNum(Color.COLOR_MAX));
@@ -175,32 +176,24 @@ RgbMatching.prototype.checkForWin = function (){
     setTimeout(function(){$("#color-main").removeClass("incorrect-glow");},1400);
   }
 }
-var game = new RgbMatching();
 
-$('#press').click(function(){
-  game.colorCenter = [];
-  game.colorCorrect = [];
-  game.bgColorChange();
-});
+RgbMatching.prototype.gameOver = function(){
+  this.colorCenter = [];
+  this.colorCorrect = [];
+  this.colorSelect = { "red-panel":false,"green-panel":false,"blue-panel":false};
+  this.score = 0;
+  $(".color-choice").removeClass("active");
+  $("#color-main").addClass("initial");
+  $("#new-game").html("Retry");
+  $("body").css("background-color", "rgb(0,0,0)");
+  $("div").addClass("fadeOut");
+  $("h2").addClass("hidden");
+  setTimeout(function(){
+    $("#new-game").removeClass("hidden");
+    $("#new-game").addClass("fadeIn");
+  }, 1000);
 
-$(".color-choice").click(function(){
-  var colorOption = [0,0,0];
-  var colorPanel = $(this).parent().attr("id");
-
-  if($(this).hasClass("active")){
-    $(this).removeClass("active");
-    game.colorSelect[colorPanel] = false;
-  }
-  else{
-    $(this).addClass("active");
-    game.colorSelect[colorPanel] = true;
-    $(this).prevAll().removeClass("active");
-    $(this).nextAll().removeClass("active");
-    colorOption = Color.RgbToArray($(this).css("background-color"));
-  }
-  game.HueAdd(colorOption, colorPanel);
-});
-
-$("#reset").click(function(){
-  game.reset();
-});
+  setTimeout(function(){
+    $("#new-game").removeClass("fadeIn");
+  }, 4500);
+}
