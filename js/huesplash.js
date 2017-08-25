@@ -1,4 +1,6 @@
 var Color = new Color();
+var audioShake = new Audio("./sounds/shake.wav");
+
 function RgbMatching() {
   this.colorCenter = [];
   this.colorCorrect = [];
@@ -131,6 +133,7 @@ RgbMatching.prototype.HueAdd = function(color,colorPanel){
 }
 
 RgbMatching.prototype.reset = function(){
+  audioShake.play();
   $(".color-choice").removeClass("active");
   this.colorSelect = { "red-panel":false,"green-panel":false,"blue-panel":false};
   $("#color-main").addClass("initial bg-transition");
@@ -172,6 +175,7 @@ RgbMatching.prototype.checkForWin = function (){
     }
   else{
     $("#color-main").addClass("incorrect-glow");
+    audioShake.play();
     $("#animation-wrapper").addClass("shake");
     setTimeout(function(){$("#animation-wrapper").removeClass("shake");},600);
     setTimeout(function(){$("#color-main").removeClass("incorrect-glow");},1400);

@@ -1,7 +1,21 @@
 var game = new RgbMatching();
+
+var audioBackground = new Audio("./sounds/piano_background.wav");
+var redpanelAudio = new Audio("./sounds/sound_red.wav");
+var greenpanelAudio = new Audio("./sounds/sound_green.wav");
+var bluepanelAudio = new Audio("./sounds/sound_blue.wav");
+
+redpanelAudio.volume = 0.7;
+bluepanelAudio.volume = 0.7;
+greenpanelAudio.volume = 0.7;
+
+audioBackground.loop = true;
+
 $(document).ready(function(){
 
+  audioBackground.play();
 $('#new-game').click(function(){
+  audioBackground.volume = 0.65;
   game.colorCenter = [];
   game.colorCorrect = [];
 
@@ -27,6 +41,16 @@ $('#new-game').click(function(){
 $(".color-choice").click(function(){
   var colorOption = [0,0,0];
   var colorPanel = $(this).parent().attr("id");
+  var audio = colorPanel.replace('-','') +"Audio";
+
+  switch(colorPanel){
+    case "red-panel":
+      redpanelAudio.play();
+    case "green-panel":
+      bluepanelAudio.play();
+    case "blue-panel":
+      greenpanelAudio.play();
+  }
 
   if($(this).hasClass("active")){
     $(this).removeClass("active");
