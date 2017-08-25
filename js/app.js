@@ -1,12 +1,14 @@
 var game = new RgbMatching();
-var timer;
-
 $(document).ready(function(){
 
 $('#new-game').click(function(){
-  timer = new Timer(10000);
   game.colorCenter = [];
   game.colorCorrect = [];
+
+  if($("h2").hasClass("final-score")){
+    $("h2").removeClass("final-score");
+    $("h2").html(game.score);
+  }
   $("h2").removeClass("hidden");
   $("div").removeClass("fadeOut");
   $("div").removeClass("hidden");
@@ -16,8 +18,9 @@ $('#new-game').click(function(){
   setTimeout(function(){
     $(".start-up").removeClass("fadeOut");
     $(".start-up").addClass("hidden");
+    $("div").removeClass("fadeIn");
+    $("h2").removeClass("fadeIn");
   },2000);
-  setTimeout(() => {timer.CountDown()},1000);
   game.bgColorChange();
 });
 
@@ -39,9 +42,44 @@ $(".color-choice").click(function(){
   game.HueAdd(colorOption, colorPanel);
 });
 
+  $("#reset").click(function(){
+    game.reset();
 
-$("#exit").click(function(){
-  game.gameOver();
-});
+  });
+  $("#exit").click(function(){
+    game.gameOver();
+  });
 
+var index;
+
+  $("#tutorial.initial").click(function(){
+    if($("#tutorial").hasClass("initial")){
+      index = 0;
+      $("h3").html(game.tutorial[index]);
+      $("h3").removeClass("hidden");
+      $(".start-up").addClass("fadeOut");
+      $("h3").addClass("fadeIn");
+    setTimeout(function(){
+      $("#tutorial").html("Next");
+      $(".start-up").removeClass("fadeOut");
+      $("#tutorial").removeClass("initial");
+      $("#new-game").addClass("hidden");
+      $("#tutorial").addClass("fadeIn next");
+      $("h3").removeClass("fadeIn");
+      $("h3").removeClass("fadeIn");
+    },2000);
+  }
+  else{
+    index++;
+    if($("#tutorial").hasClass("fadeIn"))
+      $("#tutorial").removeClass("fadeIn");
+    if(index === (game.tutorial.length - 1)){
+      $("#tutorial").html("Exit");
+    }
+    else if(index === game.tutorial.length){
+      location.reload();
+    }
+      $("h3").html(game.tutorial[index]);
+  }
+  });
 });

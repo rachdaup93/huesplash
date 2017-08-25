@@ -7,9 +7,16 @@ function RgbMatching() {
     "green-panel":false,
     "blue-panel":false};
   this.score = 0;
+  this.timer = new Timer();
+  this.tutorial = [
+    "The goal of this game is to have the white block match the background color by selecting the correct red blue and green values.<br><br>A red blue and green value MUST be selected to complete the level, no matter how close the block gets to the background.",
+    "The primary colors are RED, GREEN, and BLUE rather than RED YELLOW and BLUE. For yellow, you must blend RED and GREEN together.<br><br>Do not consider the values as brighter or darker, but as more or less respectively (i.e. if you think the block needs LESS green, pick a shade DARKER than the one selected.<br><br>The brighter the values are the lighter the block gets. The brightest colors of RED, GREEN, and BLUE make WHITE.",
+    "Don’t worry about the timer, it's only there to change the level to a new color, so you don’t get frustrated. There is no losing to this game. Simply relax and enjoy."
+  ]
 }
 
 RgbMatching.prototype.bgColorChange = function() {
+  setTimeout(() => {this.resetTimer()},500);
   var shadeArray = ['','transparent'], color;
   $("body").css("background-color", "rgb(255,255,255)");
   this.colorCorrect.push(Color.generateRandomNum(Color.COLOR_MAX));
@@ -58,7 +65,6 @@ RgbMatching.prototype.RedValue = function () {
   for(i = 0; i < redPanelButtons.length; i++){
     $(redPanelButtons[i]).css('background-color',redColorList[i]);
   }
-  console.log(redValCorrect);
 };
 
 RgbMatching.prototype.GreenValue = function (greenVal) {
@@ -75,7 +81,6 @@ RgbMatching.prototype.GreenValue = function (greenVal) {
   for(i = 0; i < greenPanelButtons.length; i++){
     $(greenPanelButtons[i]).css('background-color',greenColorList[i]);
   }
-  console.log(greenValCorrect);
 };
 
 RgbMatching.prototype.BlueValue = function (blueVal) {
@@ -94,7 +99,6 @@ RgbMatching.prototype.BlueValue = function (blueVal) {
   for(i = 0; i < bluePanelButtons.length; i++){
     $(bluePanelButtons[i]).css('background-color',blueColorList[i]);
   }
-  console.log(blueValCorrect);
 };
 
 RgbMatching.prototype.HueAdd = function(color,colorPanel){
@@ -128,9 +132,7 @@ RgbMatching.prototype.HueAdd = function(color,colorPanel){
 
 RgbMatching.prototype.reset = function(){
   $(".color-choice").removeClass("active");
-  this.colorSelect["red-panel"] = false;
-  this.colorSelect["green-panel"] = false;
-  this.colorSelect["blue-panel"] = false;
+  this.colorSelect = { "red-panel":false,"green-panel":false,"blue-panel":false};
   $("#color-main").addClass("initial bg-transition");
   $("#animation-wrapper").addClass("shake");
   $("#color-main").css('background-color',"rgb(255,255,255)");
@@ -145,6 +147,7 @@ RgbMatching.prototype.checkForWin = function (){
     checkColor = this.colorCenter.toString();
     checkColor = checkColor.replace(/ /g, "");
     if(checkColor === this.colorCorrect.toString()){
+      this.timer.clearTime();
       this.score++;
       $(".header").css("color", "rgb(" + this.colorCorrect.toString() + ")");
       $("div").addClass("fadeOut");
@@ -152,9 +155,7 @@ RgbMatching.prototype.checkForWin = function (){
       setTimeout(() => {
         this.colorCenter = [];
         this.colorCorrect = [];
-        this.colorSelect["red-panel"] = false;
-        this.colorSelect["green-panel"] = false;
-        this.colorSelect["blue-panel"] = false;
+        this.colorSelect = { "red-panel":false,"green-panel":false,"blue-panel":false};
       $(".color-choice").removeClass("active");
       $("#color-main").addClass("initial");
     }, 2500);
@@ -178,6 +179,7 @@ RgbMatching.prototype.checkForWin = function (){
 }
 
 RgbMatching.prototype.gameOver = function(){
+  this.timer.clearTime();
   this.colorCenter = [];
   this.colorCorrect = [];
   this.colorSelect = { "red-panel":false,"green-panel":false,"blue-panel":false};
@@ -190,10 +192,26 @@ RgbMatching.prototype.gameOver = function(){
   $("h2").addClass("hidden");
   setTimeout(function(){
     $("#new-game").removeClass("hidden");
+    $("h2").removeClass("hidden");
+    $("h2").addClass("fadeIn final-score");
     $("#new-game").addClass("fadeIn");
   }, 1000);
 
   setTimeout(function(){
     $("#new-game").removeClass("fadeIn");
+    $("h2").removeClass("fadeIn");
   }, 4500);
+}
+
+RgbMatching.prototype.passLevel = function(){
+  this.timer.clearTime();
+  this.colorCenter = [];
+  this.colorCorrect = [];
+  this.reset();
+  this.bgColorChange();
+}
+
+RgbMatching.prototype.resetTimer = function (){
+  this.timer = new Timer();
+  this.timer.CountDown(45000, this);
 }
